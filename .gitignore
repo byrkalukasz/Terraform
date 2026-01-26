@@ -1,0 +1,56 @@
+############################################
+# Terraform / OpenTofu
+############################################
+
+# Local Terraform cache
+**/.terraform/*
+**/.terraform.lock.hcl~
+
+# State files (NEVER commit)
+**/*.tfstate
+**/*.tfstate.*
+**/terraform.tfstate.d/*
+
+# Crash logs
+crash.log
+crash.*.log
+
+# CLI config files (may contain creds)
+.terraformrc
+terraform.rc
+
+# Plan files (can contain sensitive values)
+*.tfplan
+*.plan
+plan.out
+
+# Variable files (often contain secrets)
+*.tfvars
+*.tfvars.json
+# If you want to commit safe, non-secret tfvars, you can negate specific files like:
+# !envs/dev.tfvars
+
+# Override files (deprecated but still appear)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Logs
+*.log
+
+############################################
+# Terragrunt (if you use it)
+############################################
+**/.terragrunt-cache/*
+terragrunt-debug.tfvars.json
+
+############################################
+# Common OS/IDE junk
+############################################
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.iml
+

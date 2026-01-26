@@ -1,0 +1,1 @@
+--var create_bucket=true/false create_rabbitmq=true/false create_secret_manager=true/false create_aurora=true/false
