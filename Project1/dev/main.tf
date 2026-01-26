@@ -9,7 +9,7 @@ terraform {
 }
 
 provider "aws" {
-  profile = "poweruser_stage"
+  profile = "poweruser_dev"
   region = "eu-central-1"
 }
 
