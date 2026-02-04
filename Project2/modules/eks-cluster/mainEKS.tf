@@ -1,62 +1,95 @@
-module "eks" {
-    source  = "terraform-aws-modules/eks/aws"
-    version = "~> 21.0"
-
-    name = "eks-LB-test"
-    kubernetes_version = "1.33"
-    
-    create_iam_role = false
-    iam_role_arn = "arn:aws:iam::221082192465:role/stage-01-eks-cluster-20250210083129583200000003"
-
-    compute_config = {
-        enable = false
-    }
-
-    vpc_id = "vpc-07505c96ebab59e64"
-    subnet_ids = [
-        "subnet-0a0d8b0a348cfa7a5",  # stage-01-vpc-private-eu-central-1a
-        "subnet-0511f9a6627a745cd",  # stage-01-vpc-private-eu-central-1b
-        "subnet-052eb545d6eb696de"   # stage-01-vpc-private-eu-central-1c
-    ]
-eks_managed_node_groups = {
-        linpool = {
-        instance_types = ["t3a.small"]
-        capacity_time = "ON_DEMAND"
-        min_size = 1
-        desired_size = 1
-        max_size = 1
-        labels = {
-            pool = "Linpool"
-            os = "linux"
-        }
-    }
-        nodespot = {
-        instance_types = ["t3a.small"]
-        capacity_time = "SPOT"
-        min_size = 1
-        desired_size = 1
-        max_size = 1
-        labels = {
-            pool = "nodespot"
-            os = "linux"
-        }
-    }
-        winpool = {
-        instance_types = ["t3.large"]
-        capacity_time = "ON_DEMAND"
-        min_size = 0
-        desired_size = 0
-        max_size = 1
-        labels = {
-            pool = "winpool"
-            os = "Windows"
-        }
-    }
+variable "subnet_ids" {
+  type = list(string)
 }
 
-    tags = {
-        Env = "Stage"
-        Terraform = "true"
-        Blame_Autor = "Łukasz Byrka"
+#LT dla windowsa, na sztywno wybrany windows 2022 core
+#Zakomentowane podobnie jak poniżej
+# resource "aws_launch_template" "winpool" {
+#   name_prefix   = "lt-winpool-"
+#   image_id      = "ami-0f90f52ddde3cfff7"
+#   instance_type = "t3.large"
+
+#   tag_specifications {
+#     resource_type = "instance"
+#     tags = {
+#       Name = "winpool"
+#     }
+#   }
+# }
+
+
+module "eks" {
+  source  = "terraform-aws-modules/eks/aws"
+  version = "~> 21.0"
+
+  name               = "eks-LB-test"
+  kubernetes_version = "1.34"
+
+  vpc_id     = "vpc-0acbd8bfe05119cb6"
+  subnet_ids = var.subnet_ids
+
+  compute_config = {
+    enabled = false
+  }
+
+  addons = {
+    coredns = {}
+    kube-proxy = {}
+    vpc-cni = {
+      before_compute = true
     }
+  }
+
+  eks_managed_node_groups = {
+    linpool = {
+      instance_types = ["t3a.small"]
+      capacity_type  = "ON_DEMAND"
+      min_size       = 1
+      max_size       = 2
+      desired_size   = 1
+
+      labels = {
+        pool = "Linpool"
+        os   = "linux"
+      }
+    }
+        linspot = {
+      instance_types = ["t3a.small"]
+      capacity_type  = "SPOT"
+      min_size       = 0
+      max_size       = 2
+      desired_size   = 0
+
+      labels = {
+        pool = "Winpool"
+        os   = "windows"
+      }
+    }
+    winpool = {
+        #Zakomentowanie aby nie generować dodwatkowych ksoztów, z tego co się dowiedziałem potrzeba jeszce lunch tempate
+        #Zrobiony powyzej
+        #platform = "windows"
+      instance_types = ["t3a.small"]
+      capacity_type  = "ON-DEMAND"
+      min_size       = 0
+      max_size       = 2
+      desired_size   = 0
+
+    #   launch_template = {
+    #     id = aws_launch_template.winpool.id
+    #     version = "$Latests"
+    #   }
+
+      labels = {
+        pool = "Winpool"
+        os   = "windows"
+      }
+    }
+  }
+
+  tags = {
+    Env         = "Stage"
+    Terraform   = "true"
+    Blame_Autor = "Łukasz Byrka"
+  }
 }
