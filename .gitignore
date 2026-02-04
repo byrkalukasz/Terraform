@@ -53,4 +53,5 @@ Thumbs.db
 .vscode/
 .idea/
 *.iml
-
+# Zrzuty wyników
+**/screen/
