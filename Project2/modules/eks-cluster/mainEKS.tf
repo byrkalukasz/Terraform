@@ -70,7 +70,7 @@ module "eks" {
         #Zrobiony powyzej
         #platform = "windows"
       instance_types = ["t3a.small"]
-      capacity_type  = "ON-DEMAND"
+      capacity_type  = "ON_DEMAND"
       min_size       = 0
       max_size       = 2
       desired_size   = 0
