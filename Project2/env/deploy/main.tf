@@ -1,17 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.0"
-    }
-  }
-}
-
-provider "aws" {
-  profile = "admin_gildia"
-  region  = "eu-central-1"
-}
-
 locals {
   vpc_id = "vpc-0acbd8bfe05119cb6"
 }

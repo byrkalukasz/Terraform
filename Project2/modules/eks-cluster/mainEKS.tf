@@ -2,8 +2,8 @@ variable "subnet_ids" {
   type = list(string)
 }
 
-#LT dla windowsa, na sztywno wybrany windows 2022 core
-#Zakomentowane podobnie jak poniżej
+# LT dla windowsa, na sztywno wybrany windows 2022 core
+# Zakomentowane podobnie jak poniżej
 # resource "aws_launch_template" "winpool" {
 #   name_prefix   = "lt-winpool-"
 #   image_id      = "ami-0f90f52ddde3cfff7"
