@@ -9,6 +9,6 @@ terraform {
 
 provider "aws" {
   //profile = "admin_gildia"
-  profile = "poweruser_stage"
+  profile = "admin_prywatne"
   region  = "eu-central-1"
 }

@@ -1,7 +1,3 @@
-variable "subnet_ids" {
-  type = list(string)
-}
-
 # LT dla windowsa, na sztywno wybrany windows 2022 core
 # Zakomentowane podobnie jak poniżej
 # resource "aws_launch_template" "winpool" {
@@ -22,10 +18,10 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 21.0"
 
-  name               = "eks-LB-test"
-  kubernetes_version = "1.34"
+  name               = var.name
+  kubernetes_version = var.kubernetes_version
 
-  vpc_id     = "vpc-0acbd8bfe05119cb6"
+  vpc_id     = var.vpc_id
   subnet_ids = var.subnet_ids
 
   compute_config = {
