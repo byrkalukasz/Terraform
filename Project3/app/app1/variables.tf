@@ -35,3 +35,8 @@ variable "container_port" {
   description = "Port na którym słucha aplikacja w kontenerze"
   default = 80
 }
+
+variable "service_port" {
+  type    = number
+  default = 80
+}
