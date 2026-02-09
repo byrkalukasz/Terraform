@@ -1,7 +1,8 @@
 resource "kubernetes_service" "clusterip"{
+  for_each = var.namespace
     metadata {
       name = "$(var.name)-clusterip"
-      namespace = var.namespace
+      namespace = each.key
     }
 
     spec {

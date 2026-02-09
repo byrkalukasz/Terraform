@@ -1,7 +1,8 @@
 resource "kubernetes_deployment" "app"{
+  for_each = var.namespace
     metadata {
       name = var.name
-      namespace = var.namespace
+      namespace = each.key
       labels = var.labels
     }
     spec{

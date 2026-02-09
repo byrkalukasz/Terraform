@@ -5,9 +5,9 @@ variable "name" {
 }
 
 variable "namespace" {
-  type = string
+  type = set(string)
   description = "Namespace, gdzie ma wylądować aplikacja"
-  default = "app1"
+  default = ["app1","app2"]
 }
 
 variable "image" {

@@ -57,8 +57,8 @@ module "eks" {
       desired_size   = 0
 
       labels = {
-        pool = "Winpool"
-        os   = "windows"
+        pool = "Linspot"
+        os   = "lindows"
       }
     }
     winpool = {
