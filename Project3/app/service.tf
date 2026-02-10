@@ -16,3 +16,21 @@ resource "kubernetes_service" "clusterip"{
       }
     }
 }
+
+resource "kubernetes_service" "LB" {
+  for_each = var.namespace
+  metadata {
+    name = "$(var.name)LB"
+    namespace = each.key
+  }
+  spec {
+    type = "LoadBalancer"
+    selector = var.labels
+
+    port {
+      name = "http"
+      port = 80
+      target_port = var.container_port
+    }
+  }
+}
