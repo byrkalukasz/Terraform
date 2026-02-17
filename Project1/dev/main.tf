@@ -1,47 +1,17 @@
-#Przygotowanie profidera
-terraform {
-  required_providers {
-    aws = {
-        source = "hashicorp/aws"
-        version = "~> 6.0"
-    }
-  }
-}
-
-provider "aws" {
-  profile = "poweruser_dev"
-  region = "eu-central-1"
-}
-
-#Zmienne
-variable "env" { type = string }
-variable "engineType" { type = string }
-variable "engineVersion" { type = string }
-variable "engineTinstanceType" { type = string }
-variable "userName" { type = string }
-variable "password" { type = string }
-variable "vpc_name" { type = string }
-variable "db_sg_name" { type = string }
-variable "auroraEngine" { type = string }
-variable "auroraEngineVersion" { type = string }
-variable "auroraEngineTinstanceType" { type = string }
 
 #S3 Bucket
 module "s3" {
     source = "../modules/s3"
-      count  = var.create_bucket ? 1 : 0
-    name = "app-${var.env}"
-    tags = {
-      Name = "test-tf-LB"
-      Env = var.env
-    }
+    count  = var.create_bucket ? 1 : 0
+    name = local.app_name
+    tags = merge(local.common_tags, {Name = "s3-${var.env}"})
 }
 
 #RabbitMQ
 module "rabbitMQ" {
   source = "../modules/rabbit"
   count  = var.create_rabbitmq ? 1 : 0
-  name = "app-${var.env}"
+  name = local.app_name
   engineType = var.engineType
   engineVersion = var.engineVersion
   instanceType = var.engineTinstanceType
@@ -49,13 +19,16 @@ module "rabbitMQ" {
     username = var.userName
     password = var.password
   }
+      tags = merge(local.common_tags, {Name = "SM-${var.env}"})
+
 }
 
 #Secret Manager
 module "secretManager" {
     source = "../modules/secretManager"
     count = var.create_secret_manager ? 1 : 0
-    name = "app-${var.env}"
+    name = local.app_name
+    tags = merge(local.common_tags, {Name = "SM-${var.env}"})
 }
 
 #Dane VPC i security group
@@ -89,7 +62,7 @@ resource "random_password" "db_random" {
 module "aurora"{
   source = "../modules/aurora"
   count = var.create_aurora ? 1 : 0
-  name = "app-${var.env}"
+  name = local.app_name
   engineType = var.auroraEngine
   engineVersion = var.auroraEngineVersion
   instanceType = var.auroraEngineTinstanceType

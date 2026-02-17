@@ -18,6 +18,11 @@ variable "instanceType" {
     type = string      
 }
 
+variable "tags" {
+    description = "Tagi"
+    type = map(string)  
+}
+
 variable "user" {
   type = object({
     username = string

@@ -8,4 +8,5 @@ resource "aws_mq_broker" "rabbitMQ" {
     username = var.user.username
     password = var.user.password
   }
+  tags = var.tags
 }
